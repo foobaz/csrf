@@ -16,8 +16,10 @@ import (
 type Authenticator struct {
 	// Key should be approximately 64 bytes of unguessable data
 	Key []byte
-	// Each character of a token supplies 2.9 bits of security.
-	// Recommended values are 12 - 40.
+	// Each character of a token supplies 3.02 bits of security.
+	// Recommended values are 12 - 40. The maximum effective length
+	// is 168. Higher values work correctly but do not provide any
+	// additional security.
 	TokenLength int
 	// Tokens remain valid for at least Lifetime, and no more
 	// than twice Lifetime. Lower values provide better security,
