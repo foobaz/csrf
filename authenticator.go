@@ -3,7 +3,6 @@ package csrf
 import (
 	"crypto/hmac"
 	"crypto/sha512"
-	"crypto/subtle"
 	"encoding/binary"
 	"log"
 	"math/big"
@@ -115,10 +114,8 @@ func (a *Authenticator) ValidateToken(date time.Time, session []byte, token stri
 	counter := date.UnixNano() / int64(a.Lifetime)
 	token1 := a.generateByteTokenWithSalt(counter, session, salt)
 	token2 := a.generateByteTokenWithSalt(counter - 1, session, salt)
-	comparison1 := subtle.ConstantTimeCompare(tokenBytes, token1)
-	comparison2 := subtle.ConstantTimeCompare(tokenBytes, token2)
-	match1 := comparison1 != 0
-	match2 := comparison2 != 0
+	match1 := hmac.Equal(tokenBytes, token1)
+	match2 := hmac.Equal(tokenBytes, token2)
 	return match1 || match2
 }
 
